@@ -1,11 +1,14 @@
 package com.bcp.exchange.repository.impl;
 
+import com.bcp.exchange.model.dto.CurrencyDTO;
 import com.bcp.exchange.model.entity.Currency;
+import com.bcp.exchange.model.mapper.CurrencyMapper;
 import com.bcp.exchange.persistence.CurrencyCrudRepository;
 import com.bcp.exchange.repository.ICurrencyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Repository
@@ -14,29 +17,39 @@ public class CurrencyRepository implements ICurrencyRepository {
 	@Autowired
 	private CurrencyCrudRepository currencyCrudRepository;
 
+	@Autowired
+	private CurrencyMapper currencyMapper;
+
 	@Override
-	public List<Currency> getAll() {
-		return (List<Currency>) currencyCrudRepository.findAll();
+	public List<CurrencyDTO> getAll() {
+
+		return currencyMapper.toCurrencyDTOs((List<Currency>) currencyCrudRepository.findAll());
 	}
 
 	@Override
-	public Optional<Currency> getCurrency(Integer idCurrency) {
-		return currencyCrudRepository.findById(idCurrency);
-	}
+	public Optional<CurrencyDTO> getCurrency(Integer idCurrency) {
 
-	@Override
-	public Optional<Currency> getCurrencyBySymbol(String symbol) {
-		Currency currency = currencyCrudRepository.findBySymbol(symbol);
-
-		if(currency == null){
+		Optional<Currency> oCurrency =  currencyCrudRepository.findById(idCurrency);
+		if(!oCurrency.isPresent()){
 			return Optional.empty();
 		}
-		return Optional.of(currency);
+		return Optional.of( currencyMapper.toCurrencyDTO( oCurrency.get() ) );
 	}
 
 	@Override
-	public Currency save(Currency currency) {
-		return currencyCrudRepository.save(currency);
+	public Optional<CurrencyDTO> getCurrencyBySymbol(String symbol) {
+
+		Currency currency = currencyCrudRepository.findBySymbol(symbol);
+
+		if(Objects.isNull(currency)){
+			return Optional.empty();
+		}
+		return Optional.of( currencyMapper.toCurrencyDTO( currency ) );
+	}
+
+	@Override
+	public CurrencyDTO save(CurrencyDTO currencyDTO) {
+		return currencyMapper.toCurrencyDTO(currencyCrudRepository.save( currencyMapper.toCurrency(currencyDTO)));
 	}
 
 	@Override

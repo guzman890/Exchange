@@ -35,7 +35,7 @@ public class Validate {
 		if( Objects.isNull(value) ){
 			return true;
 		}
-		if( value.compareTo(Constant.ZERO) <= Constant.ONE){
+		if( value.compareTo(Constant.ZERO) != Constant.ONE){
 			return true;
 		}
 		return false;

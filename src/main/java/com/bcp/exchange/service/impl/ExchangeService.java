@@ -1,18 +1,20 @@
 package com.bcp.exchange.service.impl;
 
+import com.bcp.exchange.model.dto.CurrencyDTO;
+import com.bcp.exchange.model.dto.ExchangeRateDTO;
 import com.bcp.exchange.model.dto.ExchangeRequestDTO;
 import com.bcp.exchange.model.dto.ExchangeResponseDTO;
-import com.bcp.exchange.model.entity.Currency;
-import com.bcp.exchange.model.entity.ExchangeRate;
 import com.bcp.exchange.repository.ICurrencyRepository;
 import com.bcp.exchange.repository.IExchangeRateRepository;
-import com.bcp.exchange.repository.impl.CurrencyRepository;
-import com.bcp.exchange.repository.impl.ExchangeRateRepository;
 import com.bcp.exchange.service.IExchangeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import rx.Observable;
+import rx.Single;
+import rx.Subscriber;
+import rx.schedulers.Schedulers;
 
 import java.util.Optional;
 
@@ -34,32 +36,33 @@ public class ExchangeService implements IExchangeService {
 		response.setForeignCurrency(exchangeRequestDTO.getForeignCurrency());
 		response.setOriginCurrency(exchangeRequestDTO.getOriginCurrency());
 
-		Currency originCurrency;
-		Optional<Currency> oOriginCurrency = currencyRepository.getCurrencyBySymbol( exchangeRequestDTO.getOriginCurrency() );
-		if(oOriginCurrency.isPresent()){
-			originCurrency = oOriginCurrency.get();
-		}else{
-			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST,"");
-		}
+		Observable<CurrencyDTO> a = Observable.just(getCurrency(exchangeRequestDTO.getOriginCurrency()))
+						.subscribeOn(Schedulers.newThread());
+		Observable<CurrencyDTO> b = Observable.just( getCurrency(exchangeRequestDTO.getForeignCurrency()))
+						.subscribeOn(Schedulers.newThread());
 
-		Currency foreignCurrency;
-		Optional<Currency> oForeignCurrency = currencyRepository.getCurrencyBySymbol( exchangeRequestDTO.getForeignCurrency() );
-		if(oForeignCurrency.isPresent()){
-			foreignCurrency = oForeignCurrency.get();
-		}else{
-			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST,"");
-		}
-
-		ExchangeRate exchangeRate;
-		Optional<ExchangeRate> oExchangeRate= exchangeRateRepository.getExchangeRateByOriginAndForeign(originCurrency.getId(),foreignCurrency.getId());
-		if( oExchangeRate.isPresent()){
-			exchangeRate = oExchangeRate.get();
-		}else{
-			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST,"");
-		}
+		ExchangeRateDTO exchangeRate  = Observable.zip(a,b,this::getExchangeRate).toBlocking().first();
 
 		response.setAmountExchange( response.getAmount()*exchangeRate.getRate() );
 
 		return response;
+	}
+
+	private CurrencyDTO getCurrency(String symbol){
+		Optional<CurrencyDTO> oOriginCurrency = currencyRepository.getCurrencyBySymbol( symbol );
+		if(oOriginCurrency.isPresent()){
+			return oOriginCurrency.get();
+		}else{
+			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST,"");
+		}
+	}
+
+	private ExchangeRateDTO getExchangeRate(CurrencyDTO origin, CurrencyDTO foreign){
+		Optional<ExchangeRateDTO> oExchangeRate= exchangeRateRepository.getExchangeRateByOriginAndForeign(origin.getId(),foreign.getId());
+		if( oExchangeRate.isPresent()){
+			return oExchangeRate.get();
+		}else{
+			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST,"");
+		}
 	}
 }
