@@ -1,36 +1,22 @@
-package com.bcp.exchange.model.entity;
+package com.bcp.exchange.model.dto;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
-@Entity
-@Table(name = "exchangerate")
-public class ExchangeRate {
+public class ExchangeRateDTO {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name= "id")
 	private Integer id;
 
-	@Column(name= "originid")
 	private Integer originId;
 
-	@Column(name= "foreignid")
 	private Integer foreignId;
 
-	@Column(name= "rate")
 	private Double rate;
 
 
-	public ExchangeRate(){
+	public ExchangeRateDTO(){
 
 	}
 
-	public ExchangeRate(Integer id, Integer originId, Integer foreignId, Double rate) {
+	public ExchangeRateDTO(Integer id, Integer originId, Integer foreignId, Double rate) {
 		this.id = id;
 		this.originId = originId;
 		this.foreignId = foreignId;
