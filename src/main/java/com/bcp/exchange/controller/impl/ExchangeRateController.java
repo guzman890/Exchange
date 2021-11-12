@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/exchangerate")
 public class ExchangeRateController implements IExchangeRateController {
 
@@ -30,7 +31,14 @@ public class ExchangeRateController implements IExchangeRateController {
 	}
 
 	@Override
-	@GetMapping("/{id}")
+	@GetMapping("/{origin}/{foreign}")
+	public Optional<ExchangeRateDTO> getExchangeRate(@PathVariable("origin") Integer origin,@PathVariable("foreign") Integer foreign ) {
+
+		return exchangeRateService.getExchangeRateByOriginAndForeign(origin,foreign);
+	}
+
+	@Override
+	@GetMapping("/{id}/{}")
 	public Optional<ExchangeRateDTO> getExchangeRate(@PathVariable("id") Integer id) {
 
 		return exchangeRateService.getExchangeRate(id);
