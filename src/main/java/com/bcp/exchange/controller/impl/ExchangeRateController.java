@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/exchangerate")
 public class ExchangeRateController implements IExchangeRateController {
 

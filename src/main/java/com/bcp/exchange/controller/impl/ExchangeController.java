@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/exchange")
 public class ExchangeController implements IExchangeController {
 
