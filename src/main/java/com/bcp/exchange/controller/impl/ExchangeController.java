@@ -6,6 +6,7 @@ import com.bcp.exchange.controller.IExchangeController;
 import com.bcp.exchange.model.dto.ExchangeRequestDTO;
 import com.bcp.exchange.model.dto.ExchangeResponseDTO;
 import com.bcp.exchange.service.IExchangeService;
+import com.bcp.exchange.service.impl.ExchangeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;

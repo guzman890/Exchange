@@ -4,10 +4,11 @@ import com.bcp.exchange.model.entity.Currency;
 import com.bcp.exchange.persistence.CurrencyCrudRepository;
 import com.bcp.exchange.repository.ICurrencyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class CurrencyRepository implements ICurrencyRepository {
 
 	@Autowired

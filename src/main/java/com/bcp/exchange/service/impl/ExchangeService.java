@@ -6,6 +6,8 @@ import com.bcp.exchange.model.entity.Currency;
 import com.bcp.exchange.model.entity.ExchangeRate;
 import com.bcp.exchange.repository.ICurrencyRepository;
 import com.bcp.exchange.repository.IExchangeRateRepository;
+import com.bcp.exchange.repository.impl.CurrencyRepository;
+import com.bcp.exchange.repository.impl.ExchangeRateRepository;
 import com.bcp.exchange.service.IExchangeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

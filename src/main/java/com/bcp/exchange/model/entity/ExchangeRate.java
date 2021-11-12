@@ -1,10 +1,14 @@
 package com.bcp.exchange.model.entity;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "exchangerate")
 public class ExchangeRate {
 
 	@Id
@@ -12,11 +16,11 @@ public class ExchangeRate {
 	@Column(name= "id")
 	private Integer id;
 
-	@Column(name= "origin")
-	private Integer originCurrencyId;
+	@Column(name= "originid")
+	private Integer originId;
 
-	@Column(name= "foreign")
-	private Integer foreignCurrencyId;
+	@Column(name= "foreignid")
+	private Integer foreignId;
 
 	@Column(name= "rate")
 	private Double rate;
@@ -26,10 +30,10 @@ public class ExchangeRate {
 
 	}
 
-	public ExchangeRate(Integer id, Integer originCurrencyId, Integer foreignCurrencyId, Double buying, Double selling) {
+	public ExchangeRate(Integer id, Integer originId, Integer foreignId, Double rate) {
 		this.id = id;
-		this.originCurrencyId = originCurrencyId;
-		this.foreignCurrencyId = foreignCurrencyId;
+		this.originId = originId;
+		this.foreignId = foreignId;
 		this.rate = rate;
 	}
 
@@ -41,20 +45,20 @@ public class ExchangeRate {
 		this.id = id;
 	}
 
-	public Integer getOriginCurrencyId() {
-		return originCurrencyId;
+	public Integer getOriginId() {
+		return originId;
 	}
 
-	public void setOriginCurrencyId(Integer originCurrencyId) {
-		this.originCurrencyId = originCurrencyId;
+	public void setOriginId(Integer originCurrencyId) {
+		this.originId = originCurrencyId;
 	}
 
-	public Integer getForeignCurrencyId() {
-		return foreignCurrencyId;
+	public Integer getForeignId() {
+		return foreignId;
 	}
 
-	public void setForeignCurrencyId(Integer foreignCurrencyId) {
-		this.foreignCurrencyId = foreignCurrencyId;
+	public void setForeignId(Integer foreignCurrencyId) {
+		this.foreignId = foreignCurrencyId;
 	}
 
 	public Double getRate() {
